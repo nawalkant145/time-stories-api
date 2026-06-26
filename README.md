@@ -1,5 +1,9 @@
 # Time.com Latest Stories API
 
+![Node.js](https://img.shields.io/badge/Node.js-v18+-green)
+![License](https://img.shields.io/badge/License-MIT-blue)
+![Status](https://img.shields.io/badge/Status-Completed-success)
+
 A lightweight, modular Node.js API server that scrapes and returns the latest 6 unique stories from [Time.com](https://time.com) as JSON.
 
 This application is built entirely in vanilla Node.js using only built-in modules (`http` and `https`) and basic string manipulation operations. **It does not use any internal or external HTML parsing libraries or packages (such as Cheerio, jsdom, or Axios)**, strictly adhering to the assignment constraints.
@@ -14,6 +18,29 @@ This application is built entirely in vanilla Node.js using only built-in module
 - Includes integration testing.
 - Configurable server port.
 - Returns structured JSON responses.
+
+## Tech Stack
+
+- Node.js
+- HTTP Module
+- HTTPS Module
+- JavaScript (ES6)
+
+## Assignment Constraints
+
+This project intentionally avoids the use of external HTTP clients and HTML parsing libraries.
+
+Only the following built-in Node.js modules are used:
+
+- http
+- https
+
+HTML is parsed manually using basic string operations such as:
+
+- indexOf()
+- substring()
+- iteration
+- Set
 
 ## Project Structure
 
