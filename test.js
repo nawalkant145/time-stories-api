@@ -3,9 +3,8 @@ const http = require('http');
 
 console.log('Starting integration tests...');
 
-const TEST_PORT = 3001; // use custom port for test to avoid collision
+const TEST_PORT = 3001;
 
-// Spawn server process
 const serverProc = spawn('node', ['server.js', TEST_PORT]);
 
 let serverStarted = false;
@@ -52,7 +51,6 @@ function runTests() {
                 console.log('Received response data:');
                 console.log(JSON.stringify(parsedData, null, 2));
 
-                // Assertions
                 if (!Array.isArray(parsedData)) {
                     throw new Error('Assertion Failed: Response is not a JSON array.');
                 }
@@ -88,7 +86,6 @@ function cleanup(exitCode) {
     process.exit(exitCode);
 }
 
-// Timeout backup
 setTimeout(() => {
     if (!serverStarted) {
         console.error('Error: Server failed to start in time.');

@@ -4,13 +4,11 @@ const { parseLatestStories } = require('./htmlParser');
 
 const DEFAULT_PORT = 3000;
 
-// Resolve port: command-line argument first, then environment variable, then default
 const args = process.argv.slice(2);
 const portArg = parseInt(args[0], 10);
 const PORT = (!isNaN(portArg) && portArg > 0) ? portArg : (process.env.PORT ? parseInt(process.env.PORT, 10) : DEFAULT_PORT);
 
 const server = http.createServer((req, res) => {
-    // Enable CORS headers
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');

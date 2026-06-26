@@ -1,9 +1,5 @@
 const https = require('https');
 
-/**
- * Fetches the HTML content of Time.com.
- * @returns {Promise<string>} A promise that resolves with the HTML content.
- */
 function fetchHtml() {
     return new Promise((resolve, reject) => {
         const url = 'https://time.com';
@@ -11,7 +7,7 @@ function fetchHtml() {
             headers: {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
             },
-            timeout: 30000 // 30 seconds timeout
+            timeout: 60000
         };
 
         const req = https.get(url, options, (res) => {
@@ -19,7 +15,7 @@ function fetchHtml() {
 
             if (statusCode !== 200) {
                 reject(new Error(`Failed to fetch HTML from Time.com. Status Code: ${statusCode}`));
-                res.resume(); // Consume response data to free up memory
+                res.resume();
                 return;
             }
 

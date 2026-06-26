@@ -1,8 +1,3 @@
-/**
- * Decodes common HTML entities to return plain text.
- * @param {string} str The string to decode.
- * @returns {string} The decoded string.
- */
 function decodeHtmlEntities(str) {
     if (!str) return '';
     return str
@@ -22,11 +17,6 @@ function decodeHtmlEntities(str) {
         .replace(/&rdquo;/g, '”');
 }
 
-/**
- * Removes any HTML tags from a string using basic string iteration.
- * @param {string} str The HTML string.
- * @returns {string} The string with tags removed.
- */
 function stripHtmlTags(str) {
     if (!str) return '';
     let result = '';
@@ -44,12 +34,6 @@ function stripHtmlTags(str) {
     return result;
 }
 
-/**
- * Parses the raw HTML string of Time.com to extract the latest 6 stories.
- * Uses only basic string traversal (indexOf, substring, slice, loop).
- * @param {string} html The raw HTML string.
- * @returns {Array<{title: string, link: string}>} Array of latest 6 stories.
- */
 function parseLatestStories(html) {
     const stories = [];
     const seenLinks = new Set();
@@ -58,11 +42,9 @@ function parseLatestStories(html) {
     let currentIndex = 0;
 
     while (stories.length < 6) {
-        // Find next anchor start <a
         const aStart = html.indexOf('<a ', currentIndex);
         if (aStart === -1) break;
 
-        // Find the matching close tag >
         const aHeaderEnd = html.indexOf('>', aStart);
         if (aHeaderEnd === -1) {
             currentIndex = aStart + 3;
@@ -71,13 +53,12 @@ function parseLatestStories(html) {
 
         const aTagContent = html.substring(aStart, aHeaderEnd);
 
-        // Find href="..."
         let hrefStart = aTagContent.indexOf('href="');
         if (hrefStart === -1) {
             currentIndex = aHeaderEnd + 1;
             continue;
         }
-        hrefStart += 6; // move past href="
+        hrefStart += 6;
         const hrefEnd = aTagContent.indexOf('"', hrefStart);
         if (hrefEnd === -1) {
             currentIndex = aHeaderEnd + 1;
@@ -86,7 +67,6 @@ function parseLatestStories(html) {
 
         const href = aTagContent.substring(hrefStart, hrefEnd);
 
-        // Filter valid article or collection links
         const isArticleLink = href.startsWith('https://time.com/article/') || 
                               href.startsWith('https://time.com/collection/') ||
                               href.startsWith('/article/') ||
@@ -97,17 +77,14 @@ function parseLatestStories(html) {
             continue;
         }
 
-        // Find the closing </a>
         const aEnd = html.indexOf('</a>', aHeaderEnd);
         if (aEnd === -1) {
             currentIndex = aHeaderEnd + 1;
             continue;
         }
 
-        // Extract inner HTML of anchor
         const innerHTML = html.substring(aHeaderEnd + 1, aEnd);
 
-        // Extract title (check for <span>...</span> first, else use text content)
         let titleText = '';
         const spanStart = innerHTML.indexOf('<span>');
         if (spanStart !== -1) {
@@ -123,13 +100,10 @@ function parseLatestStories(html) {
 
         titleText = stripHtmlTags(titleText).trim();
         titleText = decodeHtmlEntities(titleText);
-        
-        // Clean up whitespace / newlines
         titleText = titleText.replace(/\s+/g, ' ');
 
-        currentIndex = aEnd + 4; // Move past </a>
+        currentIndex = aEnd + 4;
 
-        // Skip utility or navigation items
         const lowerTitle = titleText.toLowerCase();
         if (!titleText || lowerTitle === 'read more' || lowerTitle === 'subscribe' || lowerTitle === 'sign up') {
             continue;
@@ -137,7 +111,6 @@ function parseLatestStories(html) {
 
         const absoluteLink = href.startsWith('/') ? `https://time.com${href}` : href;
 
-        // Ensure uniqueness using a Set
         if (!seenLinks.has(absoluteLink) && !seenTitles.has(lowerTitle)) {
             seenLinks.add(absoluteLink);
             seenTitles.add(lowerTitle);
