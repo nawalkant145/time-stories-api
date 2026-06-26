@@ -29,10 +29,9 @@ const server = http.createServer((req, res) => {
                 res.end(JSON.stringify(stories));
             })
             .catch((err) => {
-                // Simple error handling for now (refined in next commit)
-                console.error(err);
-                res.writeHead(500, { 'Content-Type': 'text/plain' });
-                res.end('Internal Server Error');
+                console.error('Error fetching or parsing stories:', err.message);
+                res.writeHead(500, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Unable to fetch latest stories.' }));
             });
     } else {
         res.writeHead(404, { 'Content-Type': 'application/json' });
