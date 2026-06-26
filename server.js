@@ -1,4 +1,6 @@
 const http = require('http');
+const fetchHtml = require('./fetchHtml');
+const { parseLatestStories } = require('./htmlParser');
 
 const DEFAULT_PORT = 3000;
 
@@ -20,8 +22,18 @@ const server = http.createServer((req, res) => {
     }
 
     if (req.url === '/getTimeStories' && req.method === 'GET') {
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify([])); // Skeleton placeholder
+        fetchHtml()
+            .then((html) => {
+                const stories = parseLatestStories(html);
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify(stories));
+            })
+            .catch((err) => {
+                // Simple error handling for now (refined in next commit)
+                console.error(err);
+                res.writeHead(500, { 'Content-Type': 'text/plain' });
+                res.end('Internal Server Error');
+            });
     } else {
         res.writeHead(404, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ error: 'Route not found' }));
