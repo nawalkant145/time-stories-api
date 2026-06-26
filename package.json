@@ -1,0 +1,18 @@
+{
+  "name": "time-stories-api",
+  "version": "1.0.0",
+  "description": "A vanilla Node.js API that scrapes and returns the latest 6 stories from Time.com",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test.js"
+  },
+  "keywords": [
+    "nodejs",
+    "scraper",
+    "vanilla",
+    "api"
+  ],
+  "author": "",
+  "license": "ISC"
+}

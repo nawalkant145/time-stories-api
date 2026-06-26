@@ -4,6 +4,39 @@ A lightweight, modular Node.js API server that scrapes and returns the latest 6 
 
 This application is built entirely in vanilla Node.js using only built-in modules (`http` and `https`) and basic string manipulation operations. **It does not use any internal or external HTML parsing libraries or packages (such as Cheerio, jsdom, or Axios)**, strictly adhering to the assignment constraints.
 
+## Features
+
+- Fetches the latest 6 stories from Time.com.
+- Exposes a simple REST API (`GET /getTimeStories`).
+- Uses only built-in Node.js modules (`http` and `https`).
+- Implements manual HTML string parsing without third-party libraries.
+- Removes duplicate stories using `Set`.
+- Includes integration testing.
+- Configurable server port.
+- Returns structured JSON responses.
+
+## Project Structure
+
+```text
+time-stories-api/
+│
+├── server.js
+├── fetchHtml.js
+├── htmlParser.js
+├── test.js
+├── package.json
+├── README.md
+└── .gitignore
+```
+
+## How It Works
+
+1. The client sends a GET request to `/getTimeStories`.
+2. The server fetches the Time.com homepage using Node's `https` module.
+3. The HTML is processed using basic string operations (`indexOf`, `substring`, and iteration).
+4. The first six unique stories are extracted.
+5. The server returns the result as JSON.
+
 ## Architecture & Modular Design
 
 The project is organized following the **Separation of Concerns** principle:
@@ -13,34 +46,55 @@ The project is organized following the **Separation of Concerns** principle:
 - **`htmlParser.js`**: Implements a custom **HTML String Parser** using basic string operations (`indexOf`, `substring`, string loops, and `Set`-based deduplication) to parse out the first 6 unique article links and titles. It also decodes standard HTML entities and removes nested tags.
 - **`test.js`**: An integration test script that spawns the server, makes HTTP calls, asserts the response schema (structure, length, types), and cleans up after completion.
 
+---
+
 ## API Endpoint Contract
 
 ### GET `/getTimeStories`
 
 Retrieves the latest 6 unique stories from Time.com.
 
-#### Success Response
-- **HTTP Status Code**: `200 OK`
-- **Content-Type**: `application/json`
-- **Response Body**:
+### Example Request
+
+```http
+GET http://localhost:3000/getTimeStories
+```
+
+### Sample Response
+
 ```json
 [
   {
-    "title": "Story Title 1",
-    "link": "https://time.com/article/path-1"
+    "title": "Broken Bones, Lawsuits, and NDAs: Inside the Worker Safety Concerns at Stargate",
+    "link": "https://time.com/article/2026/06/24/ai-data-center-stargate-abilene-texas-injuries/"
   },
   {
-    "title": "Story Title 2",
-    "link": "https://time.com/article/path-2"
+    "title": "Back-to-Back Quakes Rattle Venezuela: What to Know",
+    "link": "https://time.com/article/2026/06/25/venezuela-earthquake-doublet-magnitude-casualties-explainer/"
   },
-  ...
+  {
+    "title": "How Shepard Fairey Created TIME's 'Our America' Cover",
+    "link": "https://time.com/collection/our-america-250/2026/behind-america-250-cover/"
+  },
+  {
+    "title": "Postal Service Plans Not to Deliver Mail Ballots to States Unless They Hand Over Voter Data",
+    "link": "https://time.com/article/2026/06/25/postal-service-not-to-deliver-mail-ballots-to-states-unless-they-hand-over-voter-data/"
+  },
+  {
+    "title": "Photos Show the Destruction in Venezuela From Twin Earthquakes",
+    "link": "https://time.com/article/2026/06/25/venezuela-earthquake-in-pictures/"
+  },
+  {
+    "title": "Trump Delivers First Verdict on Britain's Likely Next Prime Minister",
+    "link": "https://time.com/article/2026/06/25/trump-andy-burnham-uk-prime-minister-lead-reaction-nato-tensions/"
+  }
 ]
 ```
 
 #### Failure Response
 - **HTTP Status Code**: `500 Internal Server Error`
 - **Content-Type**: `application/json`
-- **Response Body**:
+- **Body**:
 ```json
 {
   "error": "Unable to fetch latest stories."
@@ -59,8 +113,9 @@ Retrieves the latest 6 unique stories from Time.com.
 
 By default, the server runs on port `3000`:
 ```bash
-node server.js
+npm start
 ```
+*(or `node server.js`)*
 
 You can specify a custom port as a command-line argument:
 ```bash
@@ -68,7 +123,7 @@ node server.js 8080
 ```
 Or set the `PORT` environment variable:
 ```bash
-PORT=8080 node server.js
+PORT=8080 npm start
 ```
 
 Access the API in your browser or client at:
@@ -80,6 +135,14 @@ Access the API in your browser or client at:
 
 To run the automated integration tests:
 ```bash
-node test.js
+npm test
 ```
+*(or `node test.js`)*
+
 This will automatically launch the server on port `3001` (to avoid conflicting with a running server), fetch live stories from Time.com, validate the API contract and data integrity, output the results, and shut down the test server.
+
+---
+
+## Notes
+
+This implementation depends on the current HTML structure of the Time.com homepage. If the website changes its layout or markup, the parser may require updates.
